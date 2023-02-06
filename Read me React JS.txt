@@ -1,0 +1,28 @@
+same directory***
+
+*create folder then copy file path:
+	ex: C:\Users\admin\Desktop\WD30\React
+*create new folder for new project: (react-basics)
+	ex: npx create-react-app react-basics
+*when folder is created (Happy Hacking!) this message will show:
+*follow instruction to open a new browser.
+
+diff directory***
+*enter cd /d desired directory:
+	ex:cd /d E:\react
+*then continue using npx create-react-app code.
+
+
+vite***
+*create folder then copy file path:
+	ex: C:\Users\admin\Desktop\WD30\React
+*create new folder for new project:
+	ex: C:\Users\admin\Desktop\WD30\React>npm create vite@latest
+* input project name, framework, variant:
+	√ Project name: ... react-todo-list
+	√ Select a framework: » React
+	√ Select a variant: » JavaScript
+*then follow instructions:
+	-cd react-todo-list
+	-npm install ***after installing type code . to open vs code
+	-npm run dev
