@@ -25,9 +25,9 @@
   }
   
   .main-container {
-    /* background-color: #6fa798; */
+    background-color: #6fa798;
     backdrop-filter: opacity(80%);
-    backdrop-filter: contrast(40%);
+    /* backdrop-filter: contrast(40%); */
     width: 500px;
     height: min-content;
     border-radius: 5px;
