@@ -1,99 +1,106 @@
-import React, { useState } from "react";
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import './index.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight, faChevronLeft, faCircle, faCheckCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const ItemForm = ({ addItem }) => {
-  const [itemName, setItemName] = useState("");
+const App = () => {	
+	const [items, setItems] = useState([
+		// sample array for input***
+		// { itemName: 'item 1', quantity: 0, isSelected: false },
+		// { itemName: 'item 2', quantity: 0, isSelected: false },
+		// { itemName: 'item 3', quantity: 0, isSelected: false },
+	]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addItem(itemName);
-    setItemName("");
-  };
+	const [inputValue, setInputValue] = useState('');
+	const [totalItemCount, setTotalItemCount] = useState(0);
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={itemName}
-        onChange={(e) => setItemName(e.target.value)}
-        className="form-control mb-2"
-        placeholder="Add Item"
-      />
-      <button type="submit" className="btn btn-primary btn-block">
-        Add Item
-      </button>
-    </form>
-  );
+	const handleAddButtonClick = () => {
+		const newItem = {
+			itemName: inputValue,
+			quantity: 1,
+			isSelected: false,
+		};
+
+		const newItems = [...items, newItem];
+
+		setItems(newItems);
+		setInputValue('');
+		calculateTotal();
+	};
+
+	const handleQuantityIncrease = (index) => {
+		const newItems = [...items];
+
+		newItems[index].quantity++;
+
+		setItems(newItems);
+		calculateTotal();
+	};
+
+	const handleQuantityDecrease = (index) => {
+		const newItems = [...items];
+
+		newItems[index].quantity--;
+
+		setItems(newItems);
+		calculateTotal();
+	};
+
+	const toggleComplete = (index) => {
+		const newItems = [...items];
+
+		newItems[index].isSelected = !newItems[index].isSelected;
+
+		setItems(newItems);
+	};
+
+	const calculateTotal = () => {
+		const totalItemCount = items.reduce((total, item) => {
+			return total + item.quantity;
+		}, 0);
+
+		setTotalItemCount(totalItemCount);
+	};
+
+	return (
+		<div className='app-background'>
+			<div className='main-container'>
+				<div className='add-item-box'>
+					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...' />
+					<FontAwesomeIcon icon={faPlus} onClick={() => handleAddButtonClick()} />
+				</div>
+				<div className='item-list'>
+					{items.map((item, index) => (
+						<div className='item-container'>
+							<div className='item-name' onClick={() => toggleComplete(index)}>
+								{item.isSelected ? (
+									<>
+										<FontAwesomeIcon icon={faCheckCircle} />
+										<span className='completed'>{item.itemName}</span>
+									</>
+								) : (
+									<>
+										<FontAwesomeIcon icon={faCircle} />
+										<span>{item.itemName}</span>
+									</>
+								)}
+							</div>
+							<div className='quantity'>
+								<button>
+									<FontAwesomeIcon icon={faChevronLeft} onClick={() => handleQuantityDecrease(index)} />
+								</button>
+								<span> {item.quantity} </span>
+								<button>
+									<FontAwesomeIcon icon={faChevronRight} onClick={() => handleQuantityIncrease(index)} />
+								</button>
+							</div>
+						</div>
+					))}
+				</div>
+				<div className='total'>Total: {totalItemCount}</div>
+			</div>
+		</div>
+	);
 };
 
-const ItemList = ({ addItem }) => {
-  const [items, setItems] = useState([]);
-
-  const handleAddItem = (itemName) => {
-    setItems([...items, { id: items.length + 1, name: itemName, count: 1 }]);
-  };
-
-  const handleDeleteItem = (id) => {
-    const newItems = items.filter((item) => item.id !== id);
-    setItems(newItems);
-  };
-
-  const handleIncrement = (id) => {
-    const newItems = items.map((item) => {
-      if (item.id === id) {
-        return { ...item, count: item.count + 1 };
-      }
-      return item;
-    });
-    setItems(newItems);
-  };
-
-  const handleDecrement = (id) => {
-    const newItems = items.map((item) => {
-      if (item.id === id && item.count > 1) {
-        return { ...item, count: item.count - 1 };
-      }
-      return item;
-    });
-    setItems(newItems);
-  };
-
-  const totalCount = items.reduce((acc, item) => acc + item.count, 0);
-
-  const handleSelectItem = (id) => {
-    const newItems = items.map((item) => {
-      if (item.id === id) {
-        return { ...item, selected: !item.selected };
-      }
-      return item;
-    });
-    setItems(newItems);
-  };
-
-  return (
-    <div className="container mt-5 py-5">
-      <ItemForm addItem={handleAddItem} />
-      <ul className="list-group mt-3">
-        {items.map((item) => (
-          <li key={item.id} className={`list-group-item d-flex justify-content-between align-items-center ${item.selected ? 'selected' : ''}`}>
-            <input type="radio" onClick={() => handleSelectItem(item.id)} />
-            <span className={`item-name ${item.selected ? 'selected' : ''}`}>{item.name}</span>
-            <button onClick={() => handleIncrement(item.id)} className="btn btn-warning btn-block">
-              <i className="fas fa-play"></i>
-            </button>
-            <span className="mx-2">{item.count}</span>
-            <button onClick={() => handleDecrement(item.id)} className="btn btn-warning btn-block">
-              <i className="fas fa-play fa-flip-horizontal"></i>
-            </button>
-
-          </li>
-        ))}
-      </ul>
-      <div className="text-center my-3">
-        Total Items: <b>{totalCount}</b>
-      </div>
-    </div>
-  );
-};
-
-export default ItemList;
+export default App;
